@@ -1,0 +1,25 @@
+<%@jet package = "fruitGenerator" imports="java.util.* fruit.*" class = "FruitGenerator" %>
+<% List list = (List)argument; 
+   List<Fruit> fruits = (List<Fruit>)list.get(0);%>
+<%
+Iterator<Fruit> it = fruits.iterator();
+while (it.hasNext()) {	
+	Fruit fruit 		= it.next();
+	String fruitId 		= fruit.getId(); 
+    String fruitName 	= fruit.getName();
+%>    
+class <%=fruitName%> {
+    int id = <%=fruitId%>;
+    	
+    public int getId() {
+    	return id;
+    }
+    	
+    public String getName() {
+    	return "<%=fruitName%>";
+    }
+}
+
+<%
+}
+%> 

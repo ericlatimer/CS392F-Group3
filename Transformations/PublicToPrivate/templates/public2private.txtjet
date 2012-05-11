@@ -1,0 +1,45 @@
+<%@jet package = "hello" imports="java.util.* model.Attribute model.Class model.DataType" 
+class = "OutputGenerator" %>
+<% List<Object> objs = (List<Object>)argument; 
+   List<Attribute> attrs = (List<Attribute>)objs[0];
+   List<Class> classes = (List<Class>)objs[1];
+   List<DataType> dts = (List<DataType>)obj[2];%>
+import java.util.*;   
+import model.Attribute;
+import model.Class;
+import model.DataType;   
+<%Class clas = null;
+  for(int i = 0; i < classes.size(); i++){
+	clas = classes.get(i);
+	
+%> <%=clas.visibility%> class <%=clas.className%> {
+     <%String classID = clas.classID;
+       Attribute attr = null;
+       DataType dt = null;
+       for(int j = 0; j < attrs.size(); j++){
+         attr = attrs.get(j);
+         if(attr.classID.equals(classID){
+           for(int k = 0; k < dts.size(); k++){
+             if(dts.get(k).dataTypeID.equals(attr.dataTypeID){
+                dt = dts.get(k);
+                break;
+             }
+           }
+           if(attr.visibility.equals("public")){
+     private <%=dt.name%> <%=attr.attrName%>; <%
+       String newName = attr.attrName;
+       newName = newName.charAt(0).toUpperCase() + newName.substring(1);%>
+     public void set<%=newName%>(<%=dt.name%> <%=attr.attrName%>){
+       this.<%=attr.attrName%> = <%=attr.attrName%>;
+     }         
+     public <%=dt.name%> get<%=newName%>(){
+       return this.<%=attr.attrName%>;
+     }
+           }else{%>
+     <%=attr.visibility%> <%=dt.name%> <%=attr.attName%>;
+           <%}
+           }
+         }  
+     }%>
+   }
+}%>

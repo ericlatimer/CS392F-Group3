@@ -1,0 +1,108 @@
+ <%@ jet package="JavaClasses" imports="java.util.* UML.*" class="JavaGenerator" %>
+ <% List list = (List)argument;
+   List<Operation> operations = (List<Operation>)list.get(0);
+   List<Attribute> attributes = (List<Attribute>)list.get(1);
+   List<Parameter> parameters = (List<Parameter>)list.get(2);
+   List<UMLClass> classes = (List<UMLClass>)list.get(3);
+   List<UMLPackage> packages = (List<UMLPackage>)list.get(4);
+   List<Namespace> namespaces = (List<Namespace>)list.get(5);%>
+   
+ <%for(Iterator<UMLClass> i = classes.iterator(); i.hasNext();){   
+   UMLClass c = i.next();
+   Boolean abs = c.isAbstract;
+   String visibility = c.visibility;
+   String modifier = " ";
+   if(abs) modifier = "abstract";
+   List<UMLPackage> pkgs = packages;
+   List<Namespace> nspaces = namespaces;
+   List<Operation> ops = operations;
+   List<Parameter> params = parameters;
+   List<Attribute> attrs = attributes;
+   String pkgname = null;
+   String fullname = null;
+   UMLPackage pkg = null;
+   for(Iterator<UMLPackage> p = pkgs.iterator(); p.hasNext();){
+		UMLPackage temp = p.next();
+   		if(temp.id == c.pid)
+   			pkg = temp; 
+   }
+   pkgname = pkg.name;
+   for(Iterator<Namespace> n = nspaces.iterator(); n.hasNext();){
+   		Namespace temp = n.next();
+   		if(temp.id == pkg.nsid)
+   			fullname = temp.name + "." + pkgname;
+   }
+   %>
+   
+      
+   package <%=fullname%>;
+   <%=visibility%> <%=modifier%> class <%=c.name%>{
+   		<%int cid = c.id;
+   		Attribute atr;
+   		List<String> typeList = new ArrayList<String>();
+   		List<String> nameList = new ArrayList<String>();
+   		List<String> getSetList = new ArrayList<String>();
+   		for(Iterator<Attribute> a = attrs.iterator(); a.hasNext();){
+   			atr = a.next();
+   			if(cid == atr.ownerid){
+   				String vis = atr.visibility;
+   				String own = atr.ownerscope;
+   				String type = atr.type;
+   				String attrname = atr.name;
+   				String get = "public " + type + " get" + attrname + "() {\n return this." + attrname + ";\n}";
+   				String set = "public void set" + attrname + "(" + type + " " + attrname + ") {\n this." + attrname + " = " + attrname + ";\n}";
+  				getSetList.add(get);
+  				getSetList.add(set);
+   				typeList.add(type);
+   				nameList.add(attrname);
+   				
+   				%>
+   				<%=vis%> <%=own%> <%=type%> <%=attrname%>;<%
+   			}   				
+   		}%>
+   		public <%=c.name%>(){
+   		}
+   		
+   		public <%=c.name%>(<%for(int u = 0; u < nameList.size(); u++){
+   		String str =typeList.get(u) + " " + nameList.get(u); 
+   		if(u < nameList.size()-1) str = str + ", ";%>
+   			<%=str%>
+   		<%}%>){
+   			   	<%for(int u = 0; u < nameList.size(); u++){
+   					%>this.<%=nameList.get(u)%> = <%=nameList.get(u)%>;<%
+   		}%>		
+   		}
+   		
+   		<%for(int j=0; j < getSetList.size(); j++){%>
+   			<%=getSetList.get(j)%>
+   		<%}%>
+   		
+   		
+   		<%Operation op;
+   		List<String> opList = new ArrayList<String>();
+   		List<Parameter> ps = params;
+   		for(Iterator<Operation> o = ops.iterator(); o.hasNext();){
+   			op = o.next();
+   			if(cid == op.ownerid){
+   				String line = op.visibility + " " + op.ownerscope + " " + op.type + " " + op.name + "(";
+   				Parameter param;
+   				for(Iterator<Parameter> p = ps.iterator(); p.hasNext();){
+   					param = p.next();
+   					if(param.oid == op.id){
+   						line = line + param.type + " " + param.name + ", ";
+   					}
+   				}
+   				line = line.substring(0,(line.lastIndexOf(','))) + "){};";
+   				opList.add(line);
+   			}
+   		}%>
+   		<%for(int t = 0; t < opList.size(); t++){
+   			String str2 = opList.get(t); %>
+   			<%=str2%>
+   		<%}%>
+   		
+   		
+   }
+   
+   
+   <%}%>

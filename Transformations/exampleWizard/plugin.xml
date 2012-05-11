@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*jet"
+            id="emitTemplateContribution">
+         <action
+               label="Emit Selected Template(s)"
+               class="main.EmitAction"
+               enablesFor="*"
+               id="emitTemplate">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="Prolog To Java Wizards"
+            id="exampleWizard">
+      </category>
+      <wizard
+            name="Create Java Project from Prolog File"
+            icon="icons/sample.gif"
+            category="exampleWizard"
+            class="examplewizard.wizards.SampleNewWizard"
+            id="examplewizard.wizards.SampleNewWizard">
+      </wizard>
+   </extension>
+
+</plugin>

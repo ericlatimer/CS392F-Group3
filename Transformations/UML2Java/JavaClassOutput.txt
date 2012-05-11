@@ -1,0 +1,83 @@
+package util.java;
+public abstract class Class1{
+	public  String name;
+   	public static int count;
+   	public Class1(){
+   	}
+   	public Class1(String name, int count){
+   		this.name = name;this.count = count;		
+   	}
+   	public String getname() {
+ 		return this.name;
+	}
+   	public void setname(String name) {
+ 		this.name = name;
+	}
+   	public int getcount() {
+ 		return this.count;
+	}
+   	public void setcount(int count) {
+ 		this.count = count;
+	}
+   	private static int add(int foo, int bar){};
+   	public  void speak(String words){};
+   }
+   
+   package util.java;
+   public class Class2{
+   	public static double someAttribute;
+   	public Class2(){
+   	}
+   	public Class2(double someAttribute){
+   		this.someAttribute = someAttribute;		
+   	}
+   	public double getsomeAttribute() {
+ 		return this.someAttribute;
+	}
+   	public void setsomeAttribute(double someAttribute) {
+ 		this.someAttribute = someAttribute;
+	}
+   	public  void doSomething(ArrayList inputArray){};
+   }
+   
+package util.java;
+private class Class3{
+	public  Vector someVector;
+   	public Class3(){
+   	}
+   	public Class3(Vector someVector){
+   		this.someVector = someVector;		
+   	}
+   	public Vector getsomeVector() {
+ 		return this.someVector;
+	}
+   	public void setsomeVector(Vector someVector) {
+ 		this.someVector = someVector;
+	}
+}
+
+package util.java;
+public class Class4{
+	public double dataField;
+   	private double dataField2;
+   	public Class4(){
+   	}
+   	public Class4(double dataField, double dataField2){
+   		this.dataField = dataField;
+		this.dataField2 = dataField2;		
+   	}
+   	public double getdataField() {
+ 		return this.dataField;
+	}
+   	public void setdataField(double dataField) {
+ 		this.dataField = dataField;
+	}
+   	public double getdataField2() {
+ 		return this.dataField2;
+	}
+   	public void setdataField2(double dataField2) {
+ 		this.dataField2 = dataField2;
+	}
+   	private  double multiplyFields(double dataField, double dataField2){};
+   }
+   

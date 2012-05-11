@@ -1,0 +1,75 @@
+<%@ jet package="SWRLOut" imports="java.util.* SWRL.*" class="JavaGenerator" %>
+ <% List list = (List)argument;
+   List<Atom> atoms = (List<Atom>)list.get(0);
+   List<Body> bodies = (List<Body>)list.get(1);
+   List<Head> heads = (List<Head>)list.get(2);
+   List<Implies> implies = (List<Implies>)list.get(3);
+   List<Variable> vars = (List<Variable>)list.get(4);
+   %>
+  Rules:
+   <% int count = 0;
+   for(Iterator<Implies> imp = implies.iterator(); imp.hasNext();){
+   		count++;
+   		Implies impl = imp.next();
+   		String bID = impl.bID;
+   		String hID = impl.hID;
+   		List<Atom> bAtoms = new ArrayList<Atom>();
+   		List<Atom> hAtoms = new ArrayList<Atom>();
+   		List<Variable> vs = vars;
+   		for(Iterator<Body> bds = bodies.iterator(); bds.hasNext();){
+   			Body bd = bds.next();
+			if(bd.bID.equals(bID)){
+				String newAID = bd.aID;
+				for(Iterator<Atom> as = atoms.iterator(); as.hasNext();){
+					Atom atom = as.next();
+					if(newAID.equals(atom.aID)){
+						bAtoms.add(atom);
+					}
+				}
+			}		
+   		}
+   		for(Iterator<Head> hds = heads.iterator(); hds.hasNext();){
+   			Head hd = hds.next();
+   			if(hd.hID.equals(hID)){
+   				String newAID = hd.aID;
+   				for(Iterator<Atom> as = atoms.iterator(); as.hasNext();){
+   					Atom atom = as.next();
+   					if(newAID.equals(atom.aID)){
+   						hAtoms.add(atom);
+   					}
+   				}
+   			}
+   		}%>
+ <%=count%>. <%String sName = null;
+ 		String oName = null;
+ 		for(int i =0; i < bAtoms.size(); i++){ 		
+ 		Atom b = bAtoms.get(i);
+ 		String sID = b.subjID;
+ 		String oID = b.objID;
+ 		for(Iterator<Variable> v = vs.iterator(); v.hasNext();){
+ 			Variable var = v.next();
+ 			if(sID.equals(var.id))
+ 				sName = var.name;
+ 			else if(oID.equals(var.id))
+ 				oName = var.name;
+ 		}%> <%=sName%> <%=b.refProperty%> <%=oName%>
+		<%if(i != bAtoms.size() && bAtoms.size() >2)%>, <%else if( i != bAtoms.size() -1)%>and <%else%>, therefore
+ <%}%> <%sName = null;
+ 		oName = null;
+ 		for(int i=0; i< hAtoms.size(); i++){
+ 		Atom h = hAtoms.get(i);
+ 		String sID = h.subjID;
+ 		String oID = h.objID;
+ 		for(Iterator<Variable> v = vs.iterator(); v.hasNext();){
+ 			Variable var = v.next();
+ 			if(sID.equals(var.id))
+ 				sName = var.name;
+ 			else if(oID.equals(var.id))
+ 				oName = var.name;
+ 		}%> <%=sName%> <%=h.refProperty%> <%=oName%>
+		<%if(i != hAtoms.size() && hAtoms.size() >2)%>, <%else if( i != hAtoms.size() -1)%>and <%else%>.
+ <%}%>
+   <%}%>
+   
+   
+   

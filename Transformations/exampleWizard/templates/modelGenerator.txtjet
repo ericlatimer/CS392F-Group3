@@ -1,0 +1,63 @@
+<%@jet package = "generators" imports = "java.util.* java.util.regex.*" class = "ModelGenerator"%>
+<%Map<String, List<String>> factMap = (Map<String, List<String>>)argument;
+  List<String> classNames = new ArrayList<String>(factMap.keySet());
+  Pattern digitPattern = Pattern.compile("[0-9]+");
+  Pattern booleanPattern = Pattern.compile("true|false|False|True");
+  Pattern literalPattern = Pattern.compile("\'.*\'");
+  for(String className : classNames){
+    List<String> facts = factMap.get(className);
+    String schema = facts.get(0);
+    String[] data = schema.split(",");
+    for (int i = 0; i < data.length; ++i)
+    	data[i] = data[i].trim();
+    String fact = facts.get(1);
+    String[] data2 = fact.split(",");
+    for (int i = 0; i < data2.length; ++i)
+    	data2[i] = data2[i].trim(); 
+    	  
+	 //Eric's fix in case tmp doesn't have ( and/or )
+	 int start = 0;
+	 int end = data2[data2.length - 1].length();
+	 if (data2[0].indexOf("(") > -1)
+	 	start = data2[0].indexOf("(") + 1;
+	  if (data2[data2.length - 1].indexOf(")") > -1)
+	 	end = data2[data2.length - 1].indexOf(")");        
+	     
+    data2[0] = data2[0].substring(start);
+    data2[data2.length - 1] = data2[data2.length - 1].substring(0, end);
+    List<String> vars = new ArrayList<String>();
+    for(int i = 1; i < data.length; i++){
+      vars.add(data[i]);
+    }
+    List<String> values = new ArrayList<String>();
+    for(int i = 0; i < data2.length; i++){
+      values.add(data2[i]);
+    }
+    String value = null;
+    String type = null;
+    List<String> types = new ArrayList<String>();
+    for(int i = 0; i < values.size(); i++){
+      value = values.get(i);
+      if(digitPattern.matcher(value).matches()){
+        type = "Integer";  
+      }else if(booleanPattern.matcher(value).matches()){
+        type = "boolean";
+      }else{
+        type = "String";
+      }
+      types.add(type);
+  }%>  
+public class <%=className%>{
+  <%StringBuffer buffer = new StringBuffer();
+    for(int i = 0; i < vars.size(); i++){
+    buffer.append(types.get(i)).append(" ").append(vars.get(i)).append(", ");%>
+    public <%=types.get(i)%> <%=vars.get(i)%>;
+  <%}buffer.setLength(buffer.length() - 2);%>
+  public <%=className%>(<%=buffer.toString()%>){
+    <%for(int i = 0; i < vars.size(); i++){%>
+      this.<%=vars.get(i)%> = <%=vars.get(i)%>;
+    <%}%>
+  }
+}
+/// end of a file ///   
+  <%}%>

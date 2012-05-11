@@ -1,0 +1,13 @@
+<%@jet package = "generators" imports = "java.util.*" class = "TestGenerator"%>
+<%List<String> classNames = (List<String>)argument;
+  String initializeClassName = classNames.get(0);
+  String genName = classNames.get(classNames.size() - 1);%>
+import java.util.*;
+import generators.<%=genName%>;
+public class Test{
+	public static void main(String[] args){
+	  List<Object> objs =(new <%=initializeClassName%>()).initialize();
+	  <%=genName%> gen = new <%=genName%>();
+	  System.out.print(gen.generate(objs));
+	}
+}
